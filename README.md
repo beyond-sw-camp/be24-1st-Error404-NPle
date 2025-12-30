@@ -118,7 +118,7 @@
 | **deal** | `current_participants_count` <br> `status` | • 실시간 인원 집계(`COUNT`) 쿼리 제거<br>• DB 부하 감소 및 조회 속도 향상 |
 | **product** | `review_avg_rating` <br> `review_count` | • 리뷰 테이블 조인/집계 연산 제거<br>• 상품 리스트 로딩 속도 **대폭 개선** |
 | **order** | `total_amount` | • 주문 상세 내역 합산(`SUM`) 연산 제거<br>• 매출 통계 및 내역 확인 효율화 |
-<summary>반정규화 후 ERD </summary>
+  <summary> 반정규화 후 ERD </summary>
   <div markdown="1" style="margin-left: 20px;">
     
   <img src="./img/ERD_after.png" alt="before" width="60%" style="margin-bottom: 20px;" />
@@ -191,6 +191,7 @@ CREATE INDEX idx_product_price ON NPle.product(price);
  <img src="./img/2_mysql_after.png" alt="after" width="60%" />
   </div>
 </details>
+
 
 
 
