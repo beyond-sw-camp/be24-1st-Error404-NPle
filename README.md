@@ -60,7 +60,7 @@
 ---
 
 ## 6. 기능별 SQL
-[![SQL Query](https://img.shields.io/badge/SQL_Query-코드_확인하기-blue?style=for-the-badge&logo=mysql&logoColor=white)]([https://이동할_링크_주소를_여기에_넣으세요](https://github.com/beyond-sw-camp/be24-1st-Error404-NPle/blob/main/docs/%EA%B8%B0%EB%8A%A5_sql.txt))
+[![SQL Query](https://img.shields.io/badge/SQL_Query-코드_확인하기-blue?style=for-the-badge&logo=mysql&logoColor=white)](https://github.com/beyond-sw-camp/be24-1st-Error404-NPle/blob/main/docs/%EA%B8%B0%EB%8A%A5_sql.txt)
 
 ---
 
