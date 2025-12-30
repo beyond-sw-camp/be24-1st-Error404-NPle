@@ -61,6 +61,19 @@
 
 ## 💡 6. 부하테스트 전후 차이 
 <details>
+  <summary><strong>📉 반정규화 설계 (성능 최적화)</strong></summary>
+  <div markdown="1">
+
+| 대상 테이블 | 추가 컬럼 (Column) | 기대 효과 (Benefit) |
+| :--- | :--- | :--- |
+| **deal** | `current_participants_count` <br> `status` | • 실시간 인원 집계(`COUNT`) 쿼리 제거<br>• DB 부하 감소 및 조회 속도 향상 |
+| **product** | `review_avg_rating` <br> `review_count` | • 리뷰 테이블 조인/집계 연산 제거<br>• 상품 리스트 로딩 속도 **대폭 개선** |
+| **order** | `total_amount` | • 주문 상세 내역 합산(`SUM`) 연산 제거<br>• 매출 통계 및 내역 확인 효율화 |
+
+  </div>
+</details>
+
+<details>
   <summary>1번 상품 리스트 조회 </summary>
   <div markdown="1" style="margin-left: 20px;">
     
@@ -85,6 +98,7 @@
 
   </div>
 </details>
+
 
 
 
