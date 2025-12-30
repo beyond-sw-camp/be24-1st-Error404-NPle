@@ -1,0 +1,139 @@
+## 회원가입_USER_001
+INSERT INTO 테이블명 (email, password, name, contactNumber, address)
+VALUES ('example@email.com', 'mypassword123', '홍길동', '010-1234-5678', '서울시 강남구');
+
+## 로그인_USER_002
+SELECT id, email, name, contactNumber, address
+FROM user
+WHERE email = 'tester1@nple.com' AND password = 'password123';
+
+## 상품 리스트 조회_USER_004
+SELECT 
+    p.id, 
+    p.name AS product_name, 
+    p.price, 
+    p.stock, 
+    c.name AS category_name, 
+    s.name AS store_name
+FROM product p
+JOIN category c ON p.category_id = c.id
+JOIN store s ON p.store_id = s.id
+ORDER BY p.created_at DESC; -- 최신 등록순 정렬
+
+## 특정 카테고리만 조회_USER_004
+SELECT p.name, p.price, s.name AS store_name
+FROM product p
+JOIN store s ON p.store_id = s.id
+WHERE p.category_id = 3; -- 카테고리 ID가 1인 상품만 조회
+
+## 상품 키워드 검색_USER_005
+SELECT p.id, p.name, p.price, s.name AS store_name
+FROM product p
+JOIN store s ON p.store_id = s.id
+WHERE p.name LIKE '%98%';
+
+## 상품 상세 조회_USER_006
+SELECT 
+    p.id AS product_id,
+    p.name AS product_name,
+    p.price,
+    c.name AS category_name,
+    s.name AS store_name,
+    r.contents AS review_content,
+    r.rating AS review_rating,
+    u.name AS reviewer_name
+FROM product p
+JOIN category c ON p.category_id = c.id
+JOIN store s ON p.store_id = s.id
+LEFT JOIN review r ON p.id = r.product_id
+LEFT JOIN user u ON r.user_id = u.id
+WHERE p.id = 30; -- 조회할 상품 ID
+
+## 유저의 결제 수단 조회_PAY_002
+SELECT * FROM paymentMethod WHERE paymentMethod.user_id = [유저 ID];
+
+## 판매점 아이디를 입력 받아 각 상품별 별점 평균 조회_PROD_004_및_ADMIN_012
+SELECT product.name AS PRODUCT, AVG(review.rating) AS AVG_RATING FROM store
+INNER JOIN product ON store.id = product.store_id
+INNER JOIN review ON review.product_id = product.id
+WHERE product.id = [판매점 ID]
+GROUP BY product.id
+ORDER BY AVG_RATING DESC;
+
+## 특정 판매점에서 배송 완료 상태인 상품들의 배송 조회_SHIP_001_및_ADMIN_010 
+SELECT product.id, shipment.status FROM shipment
+INNER JOIN orderDetail ON shipment.order_id=orderDetail.order_id
+INNER JOIN product ON product.id=orderDetail.product_id
+WHERE shipment.status='COMPLETED' AND product.store_id=[판매점 ID];
+
+## 상품 상세 페이지 진입 시 공동구매 상태 및 게이지 데이터 조회_DEAL_001
+SELECT 
+    d.id AS deal_id,
+    p.name AS product_name,
+    p.price AS original_price,
+    d.discountRate,
+    ## 실시간 할인가 계산
+    ROUND(p.price * (1 - (d.discountRate / 100))) AS current_deal_price,
+    d.participants AS goal_count,
+    d.current_participants_count AS current_count,
+    ## 달성률(%) 계산 (DEAL_001 로직)
+    ROUND((d.current_participants_count / d.participants) * 100, 1) AS achievement_rate,
+    d.finished_at,
+    d.status
+FROM deal d
+JOIN product p ON d.product_id = p.id
+WHERE d.id = [조회할_DEAL_ID];
+
+
+## 1) 재고 및 딜 상태 확인_DEAL_002
+SELECT stock FROM product WHERE id = [상품_ID] FOR UPDATE;
+
+## 2) 주문 레코드 생성 (가승인 상태를 가정하여 total_price 기록)
+INSERT INTO `order` (ordered_at, user_id, dealSession_deal_id, total_price)
+VALUES (NOW(), [사용자_ID], [딜_ID], [계산된_최종가]);
+
+## 3) 딜 참여자 수 즉시 업데이트 (반정규화 컬럼 활용) 
+UPDATE deal 
+SET current_participants_count = current_participants_count + 1 
+WHERE id = [딜_ID];
+
+## 4) 재고 감소 (필요 시)
+UPDATE product SET stock = stock - 1 WHERE id = [상품_ID];
+
+## 특정 인원(예: 50명) 도달 시 할인율 상향 업데이트_DEAL_003
+UPDATE deal 
+SET discountRate = [새로운_할인율]
+WHERE id = [딜_ID] AND current_participants_count >= [단계별_기준_인원];
+
+## 가격 변동 시 상세 페이지 UI 반영을 위해 최신 정보 재조회
+SELECT discountRate, (SELECT price FROM product WHERE id = product_id) as base_price
+FROM deal
+WHERE id = [딜_ID];
+
+## [성공 시] 최소 인원 달성 시 상태 변경 및 배송 준비_DEAL_004
+UPDATE deal SET status = 'CLOSED' 
+WHERE id = [딜_ID] AND current_participants_count >= participants;
+
+## 성공한 딜의 주문들에 대해 배송(shipment) 레코드 일괄 생성 
+INSERT INTO shipment (status, updated_at, order_id)
+SELECT 'PREPARING', NOW(), id 
+FROM `order` 
+WHERE dealSession_deal_id = [성공한_딜_ID];
+
+## [실패 시] 인원 미달 시 주문 취소 처리_DEAL_004
+UPDATE deal SET status = 'FAILED' 
+WHERE id = [딜_ID] AND current_participants_count < participants;
+
+UPDATE `order` SET total_price = 0 -- 혹은 상태 컬럼 추가 시 'CANCEL'
+WHERE dealSession_deal_id = [실패한_딜_ID];
+
+## 공유하기 썸네일 생성용 데이터 조회_DEAL_005
+SELECT 
+    p.name,
+    d.discountRate,
+    (d.participants - d.current_participants_count) AS remaining_count,
+    CONCAT('현재 ', d.discountRate, '% 할인 중! ', 
+           (d.participants - d.current_participants_count), '명 남았습니다.') AS share_text
+FROM deal d
+JOIN product p ON d.product_id = p.id
+WHERE d.id = [공유할_딜_ID];
