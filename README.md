@@ -61,7 +61,7 @@
 
 ## 💡 6. 부하테스트 전후 차이 
 <details>
-  <summary>1번 SQL </summary>
+  <summary>1번 상품 리스트 조회 </summary>
   <div markdown="1" style="margin-left: 20px;">
 
 <img src="" alt="before" align="center" />
@@ -72,7 +72,7 @@
 </details>
 
 <details>
-  <summary>2번 SQL </summary>
+  <summary>2번 특정 상품 조회 </summary>
   <div markdown="1" style="margin-left: 20px;">
 
 <img src="" alt="before" align="center" />
@@ -81,6 +81,7 @@
 
   </div>
 </details>
+
 
 
 
