@@ -9,10 +9,10 @@
 
 | 이름 | GitHub |
 | :---: | :---: |
-| **강신우** | [@id](https://github.com/id) |
-| **이후경** | [@id](https://github.com/id) |
-| **박범수** | [@id](https://github.com/id) |
-| **이재혁** | [@id](https://github.com/id) |
+| **강신우** | [@shinukang](https://github.com/shinukang) |
+| **이후경** | [@sarapoba](https://github.com/sarapoba) |
+| **박범수** | [@pbgodsoo](https://github.com/pbgodsoo) |
+| **이재혁** | [@hijaehyuk](https://github.com/hijaehyuk) |
 
 ---
 
