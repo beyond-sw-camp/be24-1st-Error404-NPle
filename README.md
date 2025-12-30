@@ -145,6 +145,15 @@ ORDER BY p.created_at DESC;
 
 <details>
   <summary>2번 특정 상품 조회 </summary>
+  <pre>
+SELECT * FROM NPle.product 
+WHERE price BETWEEN 10000 AND 50000;
+  </pre>
+- 인덱스 추가
+<pre>
+1. product 테이블의 price 컬럼에 인덱스 추가
+CREATE INDEX idx_product_price ON NPle.product(price);
+</pre>
   <div markdown="1" style="margin-left: 20px;">
 
 <img src="./img/2_sql_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
@@ -153,8 +162,14 @@ ORDER BY p.created_at DESC;
 
 <img src="./img/2_sql_after.png" alt="after" width="60%" /> 
 
+ <img src="./img/2_mysql_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
+
+ <br/>
+    
+ <img src="./img/2_mysql_after.png" alt="after" width="60%" />
   </div>
 </details>
+
 
 
 
