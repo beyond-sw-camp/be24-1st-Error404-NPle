@@ -107,12 +107,38 @@
 <details>
   <summary>1번 상품 리스트 조회 </summary>
   <div markdown="1" style="margin-left: 20px;">
+  <pre>
+SELECT 
+    p.id, 
+    p.name AS product_name, 
+    p.price, 
+    p.stock, 
+    c.name AS category_name, 
+    s.name AS store_name
+FROM product p
+JOIN category c ON p.category_id = c.id
+JOIN store s ON p.store_id = s.id
+ORDER BY p.created_at DESC; 
+  </pre>
+- 인덱스 추가
+<pre>
+1. 정렬(created_at)을 우선으로 하되, 조인에 필요한 외래키들을 포함
+  CREATE INDEX idx_product_list_flow ON product(created_at DESC, category_id, store_id);
+2. 카테고리로 먼저 모으고, 그 안에서 상점 ID와 가격 정보를 포함
+  CREATE INDEX idx_product_cat_search ON product(category_id, store_id, price);
+</pre>
     
   <img src="./img/1_sql_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
     
   <br/>
     
  <img src="./img/1_sql_after.png" alt="after" width="60%" />
+
+ <img src="./img/1_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
+
+ <br/>
+    
+ <img src="./img/1_after.png" alt="after" width="60%" />
 
   </div>
 </details>
@@ -129,6 +155,7 @@
 
   </div>
 </details>
+
 
 
 
