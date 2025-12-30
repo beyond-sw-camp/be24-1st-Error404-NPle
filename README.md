@@ -45,11 +45,12 @@
 
 서버 인프라 및 기술 구성도입니다.
 
-![시스템 아키텍처](https://via.placeholder.com/800x400?text=Insert+Architecture+Image+Here)
+![시스템 아키텍처](docs/NPle_Architecture.png)
 
 * **Database:** MariaDB (Master-Slave 구조)
 * **Infra:** Linux (Ubuntu 22.04 LTS)
 
 ---
+
 
 
