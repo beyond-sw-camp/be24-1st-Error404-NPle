@@ -61,26 +61,6 @@
 
 ![EDR](docs/NPle_ERD.png)
 
-[📑 테이블 기대 효과]: 소비자는 복잡한 절차 없이 가격 혜택을 누리고, 판매자는 대량 판매를 통한 재고 소진과 안정적인 수익 구조를 확보하는 상생 모델을 지향합니다.
-- 핵심 프로세스: 사용자는 별도의 리스크 없이 구매 예약을 진행하며, 목표 인원 달성 시에만 자동 결제가 이루어지고 미달 시에는 자동으로 취소되는 시스템입니다.
-
-🔗 **프로젝트 상세 내용 확인하기** > [📑 프로젝트 기획안](https://github.com/beyond-sw-camp/be24-1st-Error404-NPle/blob/3b6ce68d9fc43252af19eeb40fd36a8b3319f5b1/docs/Error404_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EA%B8%B0%ED%9A%8D%EC%95%88.pdf)
-
----
-
-## 📋 3. 요구사항 명세 (Requirements Specification)
-
-🔗 **요구사항 명세서 상세 내용 확인하기** > [📑 요구사항 명세서](https://github.com/beyond-sw-camp/be24-1st-Error404-NPle/blob/3b6ce68d9fc43252af19eeb40fd36a8b3319f5b1/docs/NPle_%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C_1.0.pdf)
-
----
-
-## 📐 4. ERD (Entity Relationship Diagram)
-
-데이터베이스의 논리적/물리적 설계도입니다.
-*(클릭하면 확대해서 볼 수 있습니다)*
-
-![EDR](docs/NPle_ERD.png)
-
 [📑 테이블 명세서](https://github.com/beyond-sw-camp/be24-1st-Error404-NPle/blob/main/docs/NPle_%ED%85%8C%EC%9D%B4%EB%B8%94%20%EC%A0%95%EC%9D%98%EC%84%9C.pdf)
 
 ---
@@ -118,7 +98,7 @@
 | **deal** | `current_participants_count` <br> `status` | • 실시간 인원 집계(`COUNT`) 쿼리 제거<br>• DB 부하 감소 및 조회 속도 향상 |
 | **product** | `review_avg_rating` <br> `review_count` | • 리뷰 테이블 조인/집계 연산 제거<br>• 상품 리스트 로딩 속도 **대폭 개선** |
 | **order** | `total_amount` | • 주문 상세 내역 합산(`SUM`) 연산 제거<br>• 매출 통계 및 내역 확인 효율화 |
-<summary>반정규화 후 ERD </summary>
+  <summary> 반정규화 후 ERD </summary>
   <div markdown="1" style="margin-left: 20px;">
     
   <img src="./img/ERD_after.png" alt="before" width="60%" style="margin-bottom: 20px;" />
@@ -191,6 +171,8 @@ CREATE INDEX idx_product_price ON NPle.product(price);
  <img src="./img/2_mysql_after.png" alt="after" width="60%" />
   </div>
 </details>
+
+
 
 
 
