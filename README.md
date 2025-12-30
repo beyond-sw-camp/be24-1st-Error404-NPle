@@ -52,5 +52,29 @@
 
 ---
 
+## 💡 6. 부하테스트 전후 차이 
+<details>
+  <summary>1번 SQL </summary>
+  <div markdown="1" style="margin-left: 20px;">
+
+<img src="" alt="before" align="center" />
+<br/>
+<img src="" alt="after" align="center" 
+
+  </div>
+</details>
+
+<details>
+  <summary>2번 SQL </summary>
+  <div markdown="1" style="margin-left: 20px;">
+
+<img src="" alt="before" align="center" />
+<br/>
+<img src="" alt="after" align="center" 
+
+  </div>
+</details>
+
+
 
 
