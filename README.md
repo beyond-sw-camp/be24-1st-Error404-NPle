@@ -75,12 +75,13 @@
   <summary>2번 특정 상품 조회 </summary>
   <div markdown="1" style="margin-left: 20px;">
 
-<img src="" alt="before" align="center" />
+<img src="./img/2_sql_before.png" alt="before" align="center" />
 <br/>
-<img src="" alt="after" align="center" 
+<img src="./img/2_sql_after.png" alt="after" align="center" 
 
   </div>
 </details>
+
 
 
 
