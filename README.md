@@ -134,11 +134,11 @@ ORDER BY p.created_at DESC;
     
  <img src="./img/1_sql_after.png" alt="after" width="60%" />
 
- <img src="./img/1_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
+ <img src="./img/1_mysql_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
 
  <br/>
     
- <img src="./img/1_after.png" alt="after" width="60%" />
+ <img src="./img/1_mysql_after.png" alt="after" width="60%" />
 
   </div>
 </details>
@@ -155,6 +155,7 @@ ORDER BY p.created_at DESC;
 
   </div>
 </details>
+
 
 
 
