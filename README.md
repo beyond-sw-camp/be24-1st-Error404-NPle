@@ -63,10 +63,12 @@
 <details>
   <summary>1번 상품 리스트 조회 </summary>
   <div markdown="1" style="margin-left: 20px;">
-
-<img src="" alt="before" align="center" />
-<br/>
-<img src="" alt="after" align="center" 
+    
+  <img src="./img/1_sql_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
+    
+  <br/>
+    
+ <img src="./img/1_sql_after.png" alt="after" width="60%" />
 
   </div>
 </details>
@@ -75,12 +77,15 @@
   <summary>2번 특정 상품 조회 </summary>
   <div markdown="1" style="margin-left: 20px;">
 
-<img src="./img/2_sql_before.png" alt="before" align="center" />
+<img src="./img/2_sql_before.png" alt="before" width="60%" style="margin-bottom: 20px;" />
+
 <br/>
-<img src="./img/2_sql_after.png" alt="after" align="center" 
+
+<img src="./img/2_sql_after.png" alt="after" width="60%" /> 
 
   </div>
 </details>
+
 
 
 
