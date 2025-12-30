@@ -1,0 +1,251 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema NPle
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `NPle` DEFAULT CHARACTER SET utf8 ;
+USE `NPle` ;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`user`
+-- -----------------------------------------------------
+-- 수정사항: AUTO_INCREMENT 추가 및 불필요한 cart_id 제거 (cartItem에서 직접 참조)
+CREATE TABLE IF NOT EXISTS `NPle`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(45) NULL,
+  `password` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NULL,
+  `contactNumber` VARCHAR(50) NULL,
+  `address` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`category` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`store`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`store` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  `auth` TINYINT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`product`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`product` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  `price` INT NULL,
+  `created_at` DATETIME NULL,
+  `stock` INT NULL,
+  `category_id` INT NOT NULL,
+  `store_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_product_category_idx` (`category_id` ASC) VISIBLE,
+  INDEX `fk_product_store1_idx` (`store_id` ASC) VISIBLE,
+  CONSTRAINT `fk_product_category`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `NPle`.`category` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_store1`
+    FOREIGN KEY (`store_id`)
+    REFERENCES `NPle`.`store` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`review`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`review` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `review_date` DATETIME NULL,
+  `contents` TEXT NULL,
+  `rating` FLOAT NULL,
+  `user_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_review_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_review_product1_idx` (`product_id` ASC) VISIBLE,
+  CONSTRAINT `fk_review_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `NPle`.`user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_review_product1`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `NPle`.`product` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`deal`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`deal` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `started_at` DATETIME NULL,
+  `finished_at` DATETIME NULL,
+  `participants` INT NULL,
+  `discountRate` INT NULL,
+  `store_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_deal_store1_idx` (`store_id` ASC) VISIBLE,
+  INDEX `fk_deal_product1_idx` (`product_id` ASC) VISIBLE,
+  CONSTRAINT `fk_deal_store1`
+    FOREIGN KEY (`store_id`)
+    REFERENCES `NPle`.`store` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_deal_product1`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `NPle`.`product` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`dealSession`
+-- -----------------------------------------------------
+-- 1:1 관계이므로 deal_id를 PK로 유지 (AI 미적용)
+CREATE TABLE IF NOT EXISTS `NPle`.`dealSession` (
+  `deal_id` INT NOT NULL,
+  PRIMARY KEY (`deal_id`),
+  CONSTRAINT `fk_dealSession_deal1`
+    FOREIGN KEY (`deal_id`)
+    REFERENCES `NPle`.`deal` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`order`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`order` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `ordered_at` DATETIME NULL,
+  `user_id` INT NOT NULL,
+  `dealSession_deal_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_order_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_order_dealSession1_idx` (`dealSession_deal_id` ASC) VISIBLE,
+  CONSTRAINT `fk_order_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `NPle`.`user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_order_dealSession1`
+    FOREIGN KEY (`dealSession_deal_id`)
+    REFERENCES `NPle`.`dealSession` (`deal_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`shipment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`shipment` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `status` VARCHAR(45) NULL,
+  `updated_at` DATETIME NULL,
+  `order_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_shippment_order1_idx` (`order_id` ASC) VISIBLE,
+  CONSTRAINT `fk_shippment_order1`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `NPle`.`order` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`paymentMethod`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`paymentMethod` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(20) NULL,
+  `details` VARCHAR(100) NULL,
+  `user_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_paymentMethod_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_paymentMethod_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `NPle`.`user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`payment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`payment` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `paid_at` DATETIME NULL,
+  `amount` INT NULL,
+  `status` VARCHAR(45) NULL,
+  `order_id` INT NOT NULL,
+  `paymentMethod_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_payment_order1_idx` (`order_id` ASC) VISIBLE,
+  INDEX `fk_payment_paymentMethod1_idx` (`paymentMethod_id` ASC) VISIBLE,
+  CONSTRAINT `fk_payment_order1`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `NPle`.`order` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_payment_paymentMethod1`
+    FOREIGN KEY (`paymentMethod_id`)
+    REFERENCES `NPle`.`paymentMethod` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`orderDetail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `NPle`.`orderDetail` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `ordered_at` DATETIME NULL,
+  `price_at_purchase` INT NULL,
+  `discount_amount` INT NULL,
+  `order_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_orderDetail_order1_idx` (`order_id` ASC) VISIBLE,
+  INDEX `fk_orderDetail_product1_idx` (`product_id` ASC) VISIBLE,
+  CONSTRAINT `fk_orderDetail_order1`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `NPle`.`order` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_orderDetail_product1`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `NPle`.`product` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `NPle`.`cartItem`
+-- -----------------------------------------------------
+-- 수정사항: user와 직접 연결(비식별 관계), 복합 PK 간소화
+CREATE TABLE IF NOT EXISTS `NPle`.`cartItem` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `quantity` INT NULL DEFAULT 1,
+  `user_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_cartItem_user_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_cartItem_product_idx` (`product_id` ASC) VISIBLE,
+  CONSTRAINT `fk_cartItem_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `NPle`.`user` (`id`)
+    ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_cartItem_product`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `NPle`.`product` (`id`)
+    ON DELETE CASCADE ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
